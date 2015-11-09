@@ -68,14 +68,23 @@ def samplecode(npm_server,username,password):
 	print ("Deleting temporary poller....")
 	swis.delete(pollerUri)
 
-def unmanage_an_interface():
+def unmanage_a_node():
 	swis = SwisClient("localhost", "admin", "")
 	results = swis.query("SELECT TOP 1 NodeID FROM Orion.Nodes")
-	interfaceId = results["results"][0]["NodeID"]
-	netObjectId = "N:{}".format(interfaceId)
+	nodeId = results["results"][0]["NodeID"]
+	netObjectId = "N:{}".format(nodeId)
 	now = datetime.utcnow()
 	tomorrow = now + timedelta(days=1)
 	swis.invoke("Orion.Nodes", "Unmanage", netObjectId, now, tomorrow, False)
+
+def unmanage_an_interface():
+	swis = SwisClient("localhost", "admin", "")
+	results = swis.query("SELECT TOP 1 InterfaceID FROM Orion.NPM.Interfaces")
+	interfaceId = results["results"][0]["InterfaceID"]
+	netObjectId = "I:{}".format(interfaceId)
+	now = datetime.utcnow()
+	tomorrow = now + timedelta(days=1)
+	swis.invoke("Orion.NPM.Interfaces", "Unmanage", netObjectId, now, tomorrow, False)
 
 def main():
 	#try: input = raw_input  # Fix Python 2.x
